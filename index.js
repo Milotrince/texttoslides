@@ -60,8 +60,8 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
 
-    let path = getPath(req.body.id)
-    let src = req.body.text
+    let path = getPath(req.id)
+    let src = req.body.text.replace(/(\r\n|\n|\r)/gm, '\r\n\r\n')
     let theme = req.body.theme
     let args = `-s --from markdown --to pptx --reference-doc ./public/themes/${theme}.pptx -o ${path}`
 
