@@ -7762,6 +7762,10 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 html, body {
   height: 100%; }
 
+div[contenteditable="true"] {
+  overflow-y: scroll;
+  height: 20rem; }
+
 #layout-wrapper {
   width: 100%;
   display: flex;

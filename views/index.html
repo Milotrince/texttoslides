@@ -4,10 +4,11 @@
 
 <h1>You put text. You get pptx.</h1>
 
-<form action="/" method="POST">
+<form action="/" method="POST" onsubmit="return onSubmit()">
     <div class="field">
         <div class="control">
-            <textarea class="textarea" name="text" placeholder="Text goes here..." rows="10">{{data.text}}</textarea>
+            <div class="textarea" id="textdiv" contentEditable="true">{{data.text}}</div>
+            <textarea name="text" id="formtextarea" hidden></textarea>
         </div>
     </div>
     <div class="field">
@@ -22,7 +23,7 @@
     </div>
     <div class="field is-grouped">
         <div class="control">
-            <button class="button is-link" type="submit">Convert</button>
+            <button class="button is-link" id="submitbutton" type="submit">Convert</button>
         </div>
     </div>
 </form>
@@ -30,7 +31,7 @@
 <hr/>
 <section class="section">
     <h2>Formatting</h2>
-    <p>texttoslides uses markdown.</p>
+    <p>texttoslides uses markdown-ish. You can also paste images!</p>
     <div class="control">
         <textarea class="textarea has-fixed-size" readonly rows=15>
 # title
@@ -44,10 +45,25 @@ these words go in the body
 these are speaker notes
 :::
 
+# title of slide 2
+::::: columns
+::: column
+these are the contents of column 1
+:::
+::: column
+these are the contents of column 2
+:::
+:::::
+
 --------
 
 dashed line, new slide
         </textarea>
 </section>
 
+{% endblock %}
+
+{% block js %}
+<script src='../public/js/jquery.min.js'></script>
+<script src='../public/js/editor.js'></script>
 {% endblock %}
