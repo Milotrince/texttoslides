@@ -20,6 +20,8 @@
     "knex": "^0.21.17",
     "node-fetch": "^2.6.1",
     "node-pandoc": "^0.3.0",
+    "node-readability": "^3.0.0",
+    "notion-node": "^0.1.1",
     "nunjucks": "^3.2.3",
     "pg": "^8.5.1",
     "short-uuid": "^4.1.0"

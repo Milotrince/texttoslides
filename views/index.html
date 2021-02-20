@@ -2,13 +2,27 @@
 
 {% block content %}
 
-<h1>You put text. You get pptx.</h1>
+<h1>your content -> pptx</h1>
 
-<form action="/" method="POST" onsubmit="return onSubmit()">
+<form action="/grab" method="POST" onsubmit="return onSubmitGrab()">
+    <div class="field has-addons">
+        <div class="control">
+            <input class="input" id="link" name="link" type="text" placeholder="Link"></input>
+        </div>
+        <div class="control">
+            <button class="button" id="grabsubmit" type="submit">Grab content</button>
+        </div>
+    </div>
+    <p id="grabhelp" class="help">Grab content from link. Works with most articles and Notion!</p>
+</form>
+<br/>
+
+<form action="/convert" method="POST" onsubmit="return onSubmitConvert()">
     <div class="field">
         <div class="control">
             <div class="textarea" id="textdiv" contentEditable="true">{{data.text}}</div>
             <textarea name="text" id="formtextarea" hidden></textarea>
+            <textarea id="texthtml" hidden>{{data.texthtml}}</textarea>
         </div>
     </div>
     <div class="field">
@@ -34,24 +48,31 @@
     <p>texttoslides uses markdown-ish. You can also paste images!</p>
     <div class="control">
         <textarea class="textarea has-fixed-size" readonly rows=15>
-# title
-these words go in the body
+---
+title: My Slideshow Title
+subtitle: by Me
+---
+
+# Section Slide
+
+## Slide Title
+These words are part of the body.
 * list
 * list
 1. also list
 2. also list
 
 ::: notes
-these are speaker notes
+Hi, these are speaker notes.
 :::
 
-# title of slide 2
+## A Slide with Two Columns
 ::::: columns
 ::: column
-these are the contents of column 1
+These are the contents of column 1.
 :::
 ::: column
-these are the contents of column 2
+These are the contents of column 2.
 :::
 :::::
 

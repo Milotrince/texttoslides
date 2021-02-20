@@ -1,3 +1,14 @@
+let grabHelpText = ''
+
+$(document).ready(() => {
+    grabHelpText = $('#grabhelp').text()
+
+    let texthtml = $('#texthtml').text()
+    console.log(texthtml)
+    if (texthtml) {
+        $('#textdiv').html(texthtml)
+    }
+})
 
 $('[contenteditable]').on('paste', (event) => {
     event.preventDefault()
@@ -12,15 +23,40 @@ $('[contenteditable]').on('paste', (event) => {
 
 })
 
-function onSubmit() {
+function onSubmitGrab() {
+    let url = $('#link').val()
+    let $help = $('#grabhelp')
+    if (!isValidURL(url)) {
+        $help.text('Needs to be valid URL')
+        $help.addClass('has-text-danger')
+        return false
+    } else {
+        $help.text(grabHelpText)
+        $help.removeClass('has-text-danger')
+    }
+}
+
+function onSubmitConvert() {
     let text = $('#textdiv').html()
     text.replace('<b>', '<strong>')
     text.replace('</b>', '</strong>')
     text.replace('<i>', '<em>')
     text.replace('</i>', '</em>')
     $('#formtextarea').text(text)
+
+    // TODO: Need to use cookies to show loading/done loading
     // $('#submitbutton').addClass('is-loading')
 }
+
+function isValidURL(str) {
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return !!pattern.test(str);
+  }
 
 function retrieveClipboardImageAsBase64(clipboardData, callback, imageFormat){
     if (!clipboardData || !clipboardData.items) {
