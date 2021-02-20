@@ -4,7 +4,7 @@ const read = require('node-readability')
 const pandoc = require('node-pandoc')
 const h2m = require('h2m');
 const fs = require('fs')
-const Notion = require('notion-node')
+const Notion = require('node-notion')
 const notion = new Notion()
 
 let themes = []
