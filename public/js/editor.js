@@ -4,7 +4,6 @@ $(document).ready(() => {
     grabHelpText = $('#grabhelp').text()
 
     let texthtml = $('#texthtml').text()
-    console.log(texthtml)
     if (texthtml) {
         $('#textdiv').html(texthtml)
     }

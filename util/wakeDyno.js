@@ -3,7 +3,6 @@ const fetch = require("node-fetch")
 const wakeDyno = (url, interval = 25) => {
     const ms = interval * 60 * 1000
     setTimeout(() => {
-        // console.log('wake?')
         try { 
             fetch(url)
                 .then((response) => {
@@ -11,7 +10,6 @@ const wakeDyno = (url, interval = 25) => {
                         return response.json()
                     }
                 }).then((data) => {
-                    // console.log(data.message)
                 }).catch((error) => {
                     console.warn(`Error while waking: ${error.message}`)
                 })
