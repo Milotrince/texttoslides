@@ -11,7 +11,7 @@ let themes = []
 loadThemes()
 
 router.get('/', (req, res) => {
-    res.render('index.html', {
+    res.render('editor.njk', {
         themes: themes
     })
 })
@@ -27,10 +27,7 @@ router.post('/grab', async (req, res) => {
     if (url.hostname === "www.notion.so") {
         text = await extractFromNotion(link)
 
-        res.render('index.html', {
-            themes: themes,
-            data: {texthtml: text}
-        })
+        res.send({ html: text })
     }
     else {
         read(link, function(err, article, meta) {
@@ -43,16 +40,12 @@ router.post('/grab', async (req, res) => {
                 article.close();
             }
 
-            res.render('index.html', {
-                themes: themes,
-                data: {texthtml: text}
-            })
+            res.send({ html: text })
         });
     }
 })
 
-router.post('/convert', (req, res) => {
-
+router.post('/download', (req, res) => {
     let path = getPath(req.id)
     let src = h2m(req.body.text).trim()
     let theme = req.body.theme

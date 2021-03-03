@@ -1,0 +1,76 @@
+{% extends "base.njk" %}
+
+{% block content %}
+<div class="actions-container">
+    <div class="action">
+        <input id="link" type="text" placeholder="Link"></input>
+        <button id="grab-button" aria-label="Import content from link">Import from link</button>
+        <small id="grabhelp">Grab content from link. Works with most articles and Notion!</small>
+    </div>
+    <div class="action">
+        <select id="theme" name="theme">
+            <option value="default">Select theme</option>
+            {% for theme in themes %}
+                <option value={{theme}}>{{ theme }}</option>
+            {% endfor %}
+        </select>
+        <button id="download-button" aria-label="Download">Download</button>
+    </div>
+</div>
+
+<div id="editor-container">
+    <div class="editor-column">
+        <p class="label">editor</p>
+        <div id="editor" contenteditable="true">{{ text or defaulttext() }}</div>
+    </div>
+    {# <div id="editor" class="editor-column" contenteditable="true">{{ text or defaulttext() }}</div> #}
+    <div class="gutter"></div>
+
+    <div id="preview" class="editor-column">
+        <p class="label">preview</p>
+        <p>coming soon</p>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script src='../public/js/editor.js'></script>
+{% endblock %}
+
+
+
+{% macro defaulttext() %}
+<div>---</div>
+<div>title: My Slideshow Title</div>
+<div>subtitle: by Me</div>
+<div>---</div>
+<br/>
+<div># Section Slide</div>
+<br/>
+<div>## Slide Title</div>
+<div>These words are part of the body.</div>
+<div>* list</div>
+<div>* list</div>
+<div>1. also list</div>
+<div>2. also list</div>
+<br/>
+<div>::: notes</div>
+<div>Hi, these are speaker notes.</div>
+<div>:::</div>
+<br/>
+<div>## A Slide with Two Columns</div>
+<div>::::: columns</div>
+<div>::: column</div>
+<div>These are the contents of column 1.</div>
+<div>:::</div>
+<div>::: column</div>
+<div>These are the contents of column 2.</div>
+<div>:::</div>
+<div>:::::</div>
+<br/>
+<div>--------</div>
+<br/>
+<div>dashed line, new slide</div>
+{% endmacro %}
+

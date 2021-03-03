@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" href="../public/assets/icon.png">
+    <link href="../public/style/style.css" rel="stylesheet"/>
+    {% block css %}{% endblock %}
+    <title>texttoslides</title>
+  </head>
+
+  <body id="layout-wrapper">
+
+    <header>
+      <nav aria-label="main navigation">
+        <div class="nav-item">
+          <a href="/" class="nav-logo">texttoslides</a>
+        </div>
+        <div class="nav-item">
+          <button id="dark-toggle">theme</button>
+        </div>
+
+      </nav>
+    </header>
+
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+
+  </body>
+
+  <script src='../public/js/jquery.min.js'></script>
+  <script src="../public/js/dark.js"></script>
+  {% block js %}{% endblock %}
+ 
+</html>

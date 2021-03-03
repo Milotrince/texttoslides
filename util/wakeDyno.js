@@ -6,10 +6,6 @@ const wakeDyno = (url, interval = 25) => {
         try { 
             fetch(url)
                 .then((response) => {
-                    if (response.ok) {
-                        return response.json()
-                    }
-                }).then((data) => {
                 }).catch((error) => {
                     console.warn(`Error while waking: ${error.message}`)
                 })

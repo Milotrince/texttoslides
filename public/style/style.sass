@@ -1,27 +1,109 @@
 @charset "utf-8";
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter&display=swap');
+
+$font-primary: 'Inter', sans-serif
+$font-mono: 'Fira Code', monospace
+$color-primary: #ffb920
 
 
-$family-primary: 'Inter', sans-serif
-
-$navbar-height: 4rem
-$navbar-item-img-max-height: 2.5rem
-
-
-@import "../../node_modules/bulma/bulma";
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap')
-
-
-html, body
+.light-theme
+  --color-bg: #ffffff
+  --color-editor: #eeeeee
+  --color-highlight: #ffecc7
+  --color-text: #000000
+  --color-subtext: #444444
+.dark-theme
+  --color-bg: #222222
+  --color-editor: #333333
+  --color-highlight: #3b3835
+  --color-text: #ffffff
+  --color-subtext: #dddddd
+ 
+html
   height: 100%
+  overflow: hidden
 
-div[contenteditable="true"]
-  overflow-y: scroll
-  height: 20rem
+body
+  height: 100%
+  margin: 0
+  font-family: $font-primary
+  color: var(--color-text)
+  background-color: var(--color-bg)
 
-#layout-wrapper
+nav
+  background-color: var(--color-bg)
+  // position: fixed
+  // top: 0
+  // left: 0
+  width: 100%
+  vertical-align: middle
+  border-bottom: 1px solid $color-primary
+  .nav-logo
+    text-decoration: none
+    color: $color-primary
+  .nav-item
+    padding: 10px
+    height: 100%
+    display: inline-block
+    &:hover
+      background-color: var(--color-highlight)
+
+.content
+  height: 70%
+  color: var(--color-text)
+  background-color: var(--color-bg)
+
+
+button
+  color: var(--color-text)
+  background-color: var(--color-highlight)
+  border: 1px solid var(--color-subtext)
+  border-radius: 6px
+  padding: 6px
+
+input, select
+  color: var(--color-text)
+  background-color: var(--color-bg)
+  border: 1px solid var(--color-subtext)
+  border-radius: 6px
+  padding: 6px
+
+
+
+.actions-container
+  padding: 8px
+  .action
+    padding: 8px
+
+#editor-container
+  height: 100%
   width: 100%
   display: flex
-  flex-direction: column
-
-#content-wrapper
-  flex: 1
+  flex-direction: row
+  overflow: hidden
+  .editor-column
+    background-color: var(--color-editor)
+    flex-grow: 1
+    max-width: 50%
+    display: inline-block
+    margin: 0
+    .label
+      text-align: center
+      color: var(--color-subtext)
+      background-color: var(--color-highlight)
+      padding: 4px
+      margin: 0
+      font-size: 0.9rem
+  .gutter
+    width: 5px
+  #editor
+    height: 100%
+    outline: none
+    padding: 8px
+    font-family: $font-mono
+    font-size: 0.9rem
+    word-break: break-all
+    word-wrap: break-word
+    overflow-wrap: break-word
+    overflow-y: scroll
+  #preview

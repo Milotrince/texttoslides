@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "css-deploy": "npm run css-build && npm run css-postcss",
     "css-build": "node-sass public/style/style.sass public/style/style.css",
-    "css-postcss": "postcss --use autoprefixer --output public/style/style.css public/style/style.css",
+    "css-postcss": "npm postcss --use autoprefixer --output public/style/style.css public/style/style.css",
     "css-watch": "npm run css-build -- --watch"
   },
   "author": "Trinity Chung <trinityjchung@gmail.com> (https://github.com/Milotrince)",
@@ -28,7 +28,6 @@
     "short-uuid": "^4.1.0"
   },
   "devDependencies": {
-    "bulma": "^0.9.2",
     "node-sass": "^5.0.0"
   },
   "engines": {
