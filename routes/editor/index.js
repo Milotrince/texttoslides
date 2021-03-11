@@ -1,19 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const read = require('node-readability')
-const pandoc = require('node-pandoc')
 const h2m = require('h2m');
-const fs = require('fs')
 const Notion = require('node-notion')
 const notion = new Notion()
 
-let themes = []
-loadThemes()
 
 router.get('/', (req, res) => {
-    res.render('editor.njk', {
-        themes: themes
-    })
+    res.render('editor.njk')
 })
 
 router.get('/*', (req, res) => {
@@ -45,28 +39,6 @@ router.post('/grab', async (req, res) => {
     }
 })
 
-router.post('/download', (req, res) => {
-    let path = getPath(req.id)
-    let src = h2m(req.body.text).trim()
-    let theme = req.body.theme
-    let args = `-s --from markdown --to pptx --slide-level=2 --reference-doc ./public/themes/${theme}.pptx -o ${path}`
-
-    pandoc(src, args, (error, result) => {
-        if (error) return console.error(error)
-        else {
-
-            res.download(path, 'texttoslides.pptx', (err) => {
-                if (!err) {
-                    fs.unlink(path, (err) => {
-                        if (error) return console.error(error)
-                    });
-                }
-
-            });
-
-        }
-    })
-})
 
 async function extractFromNotion(link) {
     let content = ''
@@ -126,20 +98,6 @@ async function extractFromNotion(link) {
     }
 }
 
-function getPath(id) {
-    return `./temp/slides${id}.pptx`
-}
-
-function loadThemes() {
-    themes = []
-    fs.readdir('./public/themes', (err, files) => {
-        files.forEach(file => {
-            let name = file.substr(0, file.length-5)
-            if (name !== 'default')
-                themes.push(name)
-        });
-    });
-}
 
 function getTextHtml(title, content) {
     let text = h2m(content).trim()

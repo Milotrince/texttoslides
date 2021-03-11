@@ -10,9 +10,6 @@
     <div class="action">
         <select id="theme" name="theme">
             <option value="default">Select theme</option>
-            {% for theme in themes %}
-                <option value={{theme}}>{{ theme }}</option>
-            {% endfor %}
         </select>
         <button id="download-button" aria-label="Download">Download</button>
     </div>
@@ -23,54 +20,52 @@
         <p class="label">editor</p>
         <div id="editor" contenteditable="true">{{ text or defaulttext() }}</div>
     </div>
-    {# <div id="editor" class="editor-column" contenteditable="true">{{ text or defaulttext() }}</div> #}
     <div class="gutter"></div>
 
-    <div id="preview" class="editor-column">
+    <div class="editor-column">
         <p class="label">preview</p>
-        <p>coming soon</p>
+        <div id="preview" class="theme-default"></div>
     </div>
 </div>
 {% endblock %}
 
 
 {% block js %}
+<script src='../public/js/lib/pptxgen.bundle.js'></script>
+<script src='../public/js/lib/markdown-it.min.js'></script>
 <script src='../public/js/editor.js'></script>
+<script src='../public/js/preview.js'></script>
 {% endblock %}
 
 
 
 {% macro defaulttext() %}
-<div>---</div>
-<div>title: My Slideshow Title</div>
-<div>subtitle: by Me</div>
-<div>---</div>
-<br/>
-<div># Section Slide</div>
-<br/>
-<div>## Slide Title</div>
-<div>These words are part of the body.</div>
-<div>* list</div>
-<div>* list</div>
-<div>1. also list</div>
-<div>2. also list</div>
-<br/>
-<div>::: notes</div>
-<div>Hi, these are speaker notes.</div>
-<div>:::</div>
-<br/>
-<div>## A Slide with Two Columns</div>
-<div>::::: columns</div>
-<div>::: column</div>
-<div>These are the contents of column 1.</div>
-<div>:::</div>
-<div>::: column</div>
-<div>These are the contents of column 2.</div>
-<div>:::</div>
-<div>:::::</div>
-<br/>
-<div>--------</div>
-<br/>
-<div>dashed line, new slide</div>
+<div id="default-editor-text">
+# Presentation Title
+## Subtitle
+
+
+# Section Slide
+## Section Subtitle
+
+This is the description of this section.
+
+**Some bold text**,
+*some italicized text*
+
+[a mysterious link](http://random.cat)
+
+
+# Slide Title
+These words are part of the body.
+* bulleted
+* list
+1. numbered
+2. list
+
+--------
+
+dashed line, new slide
+</div>
 {% endmacro %}
 

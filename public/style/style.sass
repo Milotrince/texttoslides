@@ -1,9 +1,16 @@
-@charset "utf-8";
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter&display=swap');
+@charset "utf-8"
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Lora&family=Raleway&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Flamenco&family=Roboto:wght@300&display=swap')
 
 $font-primary: 'Inter', sans-serif
 $font-mono: 'Fira Code', monospace
 $color-primary: #ffb920
+
+$fontsize-supertitle: 1em
+$fontsize-title: 0.9em
+$fontsize-subtitle: 0.8em
+$fontsize-content: 0.4em
 
 
 .light-theme
@@ -18,6 +25,15 @@ $color-primary: #ffb920
   --color-highlight: #3b3835
   --color-text: #ffffff
   --color-subtext: #dddddd
+.theme-default
+  --font-title: $font-primary
+  --font-content: $font-primary
+.theme-fancy
+  --font-title: 'Lora', serif
+  --font-content: 'Raleway', sans-serif
+.theme-whimsical
+  --font-title: 'Flamenco', serif
+  --font-content: 'Roboto', sans-serif
  
 html
   height: 100%
@@ -32,9 +48,6 @@ body
 
 nav
   background-color: var(--color-bg)
-  // position: fixed
-  // top: 0
-  // left: 0
   width: 100%
   vertical-align: middle
   border-bottom: 1px solid $color-primary
@@ -48,7 +61,7 @@ nav
     &:hover
       background-color: var(--color-highlight)
 
-.content
+.site-content
   height: 70%
   color: var(--color-text)
   background-color: var(--color-bg)
@@ -107,3 +120,91 @@ input, select
     overflow-wrap: break-word
     overflow-y: scroll
   #preview
+    height: 100%
+    overflow-y: scroll
+    padding: 0px 10px
+    .slide-wrapper
+        margin: 2em auto
+        width: 100%
+        padding-top: 75%
+        position: relative
+    .slide
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      background-color: var(--color-bg)
+      overflow: hidden
+
+      .text
+        font-family: var(--font-content)
+        font-size: $fontsize-content !important
+      .title, .title h1
+          font-size: $fontsize-title !important
+      .subtitle, .subtitle h2
+        font-size: $fontsize-subtitle !important
+
+    // .title
+    //   background-color: #ff70ac44
+    // .subtitle
+    //   background-color: #ffbd5b44
+    // .content
+    //   background-color: #b1ff7d44
+
+    .title-layout
+      .title
+        width: 100%
+        height: 55%
+        display: flex
+        justify-content: center
+        align-items: flex-end
+        text-align: center
+      .subtitle
+        margin: auto
+        width: 80%
+        text-align: center
+        h2
+          margin: 0
+
+    .section-layout
+      display: grid
+      grid-template: "title content" "subtitle content"
+
+      .title
+        grid-area: title
+        margin-left: 10%
+        display: flex
+        justify-content: center
+        align-items: flex-end
+        text-align: center
+        h1
+          margin: 0
+      .subtitle
+        grid-area: subtitle
+        margin-left: 10%
+        text-align: center
+      .content
+        grid-area: content 
+        padding: 5%
+        display: flex
+        justify-content: center
+        flex-direction: column
+        align-items: center
+
+
+    .content-layout
+      .title
+        margin: auto
+        width: 90%
+      .content
+        margin: auto
+        width: 90%
+
+  .theme-fancy
+    .title-layout
+      background-image: url("../themes/fancy-title-bg.svg")
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+
+    

@@ -1,12 +1,21 @@
 let grabHelpText = ""
+let themes = ["fancy", "whimsical"]
 
 $(document).ready(() => {
     grabHelpText = $("#grabhelp").text()
+
+    for (let theme of themes) {
+        $("#theme").append(`<option value=${theme}>${theme}</option>`)
+    }
 
     let texthtml = $("#texthtml").text()
     if (texthtml) {
         $("#editor").html(texthtml)
     }
+})
+
+$("#theme").change(function() {
+    $("#preview").attr("class", `theme-${$(this).val()}`)
 })
 
 $("[contenteditable]").on("paste", (event) => {
@@ -44,16 +53,133 @@ $("#grab-button").on("click", (e) => {
 })
 
 $("#download-button").on("click", (e) => {
-    let theme = $("#theme").val()
-    let text = $("#editor").html()
-    text.replace("<b>", "<strong>")
-    text.replace("</b>", "</strong>")
-    text.replace("<i>", "<em>")
-    text.replace("</i>", "</em>")
+    let pptx = new PptxGenJS()
+    pptx.layout = "LAYOUT_4x3"
 
-    postHiddenForm("/download", {theme: theme, text: text})
+    $('.slide-wrapper').each(function () {
+        let slide = pptx.addSlide()
+
+        // slide
+        $(this).children().each(function () {
+
+            let slideBg = { fill: rgbToHex($(this).css("background-color")) }
+            let bgImage = $(this).css("background-image")
+            if (bgImage.startsWith("url(")) {
+                slideBg.path = bgImage.substring(5, bgImage.length-2).replace(".svg", ".png")
+            }
+            slide.background = slideBg
+
+            // slide section
+            $(this).children().each(function () {
+                if ($(this).hasClass("text")) {
+                    // text element
+                    slide.addText( getText($(this)), getTextProperties($(this), $(this).parent()) )
+                }
+            })
+        })
+    })
+    
+    pptx.writeFile()
 })
 
+
+function getText($e) {
+
+    let textList = []
+    recursive($e)
+    console.log(textList)
+    // console.log(JSON.stringify(textList, null, 2))
+    return textList
+
+    function recursive($e, tags = []) {
+        let tag = $e.prop("tagName").toLowerCase()
+        tags.push(tag)
+
+        if ($e.children().length > 0) {
+            $e.children().each(function() {
+                return recursive($(this), tags)
+            })
+        } else {
+            let options = {}
+            for (let tag of tags) {
+                switch (tag) {
+                    case "a":
+                        options.hyperlink = {url: $e.attr("href")}
+                        break
+                    case "b":
+                    case "strong":
+                        options.bold = true
+                        break
+                    case "i":
+                    case "em":
+                        options.italic = true
+                        break
+                    case "li":
+                        let parentTag = $e.parent().prop("tagName").toLowerCase()
+                        options.bullet = parentTag === "ol" ? {type: "number"} : true
+                        break
+                }
+            }
+            textList.push({ text: $e.text(), options: options })
+            return $e
+        }
+
+    }
+}
+
+function getTextProperties($e, $parent) {
+
+    let offset = {
+        top: ($e.offset().top - $parent.offset().top) / $parent.height(),
+        left: ($e.offset().left - $parent.offset().left ) / $parent.width()
+    }
+    let size = {
+        width: $e.width() / $parent.width(),
+        height: $e.height() / $parent.height(),
+    }
+    let rgbaSplit = $e.css("background-color").split(",")
+    let fill = rgbaSplit.length === 4 ? "" : rgbToHex($e.css("background-color"))
+
+    let props = {
+        x: offset.left*100+"%",
+        y: offset.top*100+"%",
+        w: size.width*100+"%",
+        h: size.height*100+"%",
+        fontSize: getEm($e, "font-size", "width")*96*7.5, // 96 px/inch, slide width 7.5in
+        fontFace: $e.css("font-family"),
+        align: $e.css("text-align").replace("start", "").replace("end", "right"),
+        valign: $e.css("align-items").replace("normal", "top").replace("flex-end", "bottom"),
+        color: rgbToHex($e.css("color")),
+        fill: fill
+    }
+
+    // console.log(props)
+
+    return props
+
+    function getEm($e, prop, parentProp) {
+        let c = getCssNumber($e, prop)
+        let p = getCssNumber($e.parent().parent(), (parentProp))
+        return Math.round(c / p * 100) / 100
+    }
+    function getCssNumber($e, prop) {
+        return parseFloat( $e.css(prop).replace( /[^0-9.]/g, "") )
+    }
+}
+
+
+
+function rgbToHex(rgb) {
+    if (  rgb.search("rgb") == -1 ) {
+        return rgb;
+    } else {
+        rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?\)$/);
+        function hex(x) {
+            return ("0" + parseInt(x).toString(16)).slice(-2);
+        }
+        return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]); 
+    }
+}
 
 function isValidURL(str) {
     var pattern = new RegExp("^(https?:\\/\\/)?"+ // protocol
@@ -63,17 +189,6 @@ function isValidURL(str) {
       "(\\?[;&a-z\\d%_.~+=-]*)?"+ // query string
       "(\\#[-a-z\\d_]*)?$","i"); // fragment locator
     return !!pattern.test(str);
-  }
-
-function postHiddenForm(url, data) {
-
-    let $form = $(`<form action="${url}" method="POST"></form>`)
-    for (let key in data) {
-        $form.append(`<input name=${key} value="${data[key]}" hidden></input>`)
-    }
-    $("body").append($form)
-    $form.submit()
-    $form.remove()
 }
 
 function retrieveClipboardImageAsBase64(clipboardData, callback, imageFormat){
