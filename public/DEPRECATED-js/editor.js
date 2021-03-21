@@ -87,8 +87,6 @@ function getText($e) {
 
     let textList = []
     recursive($e)
-    console.log(textList)
-    // console.log(JSON.stringify(textList, null, 2))
     return textList
 
     function recursive($e, tags = []) {

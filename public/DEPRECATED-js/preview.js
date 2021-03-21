@@ -73,14 +73,15 @@ function updatePreview() {
 
     $("#preview a").attr("target", "_blank");
 
-    function getSlideTextArea(name) {
-        let $search = $slide.children(`.${name}`)
-        return $search.length > 0 ? $search : $slide.append(`<div class="text ${name}"></div>`).find(`.${name}`)
-    }
 
     function shouldStartNewSlide() {
         let breaks = ["hr", "h1"]
         return breaks.includes(tag)
+    }
+
+    function getSlideTextArea(name) {
+        let $search = $slide.children(`.${name}`)
+        return $search.length > 0 ? $search : $slide.append(`<div class="text ${name}"></div>`).find(`.${name}`)
     }
 
     function addCurrentSlide() {

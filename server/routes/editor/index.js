@@ -5,13 +5,8 @@ const h2m = require('h2m');
 const Notion = require('node-notion')
 const notion = new Notion()
 
-
-router.get('/', (req, res) => {
-    res.render('editor.njk')
-})
-
 router.get('/*', (req, res) => {
-    res.redirect('/')
+    res.status(200).send("OK")
 })
 
 router.post('/grab', async (req, res) => {
@@ -21,7 +16,7 @@ router.post('/grab', async (req, res) => {
     if (url.hostname === "www.notion.so") {
         text = await extractFromNotion(link)
 
-        res.send({ html: text })
+        res.json({ html: text })
     }
     else {
         read(link, function(err, article, meta) {
@@ -34,7 +29,7 @@ router.post('/grab', async (req, res) => {
                 article.close();
             }
 
-            res.send({ html: text })
+            res.json({ html: text })
         });
     }
 })

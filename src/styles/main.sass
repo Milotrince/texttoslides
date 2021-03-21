@@ -6,11 +6,16 @@
 $font-primary: 'Inter', sans-serif
 $font-mono: 'Fira Code', monospace
 $color-primary: #ffb920
+$color-warning: #e64a4a
 
 $fontsize-supertitle: 1em
 $fontsize-title: 0.9em
 $fontsize-subtitle: 0.8em
 $fontsize-content: 0.4em
+
+*
+  transition: color 0.3s ease
+  transition: background-color 0.3s ease
 
 
 .light-theme
@@ -81,6 +86,9 @@ input, select
   border-radius: 6px
   padding: 6px
 
+  
+.warning
+  color: $color-warning
 
 
 .actions-container
@@ -145,13 +153,6 @@ input, select
       .subtitle, .subtitle h2
         font-size: $fontsize-subtitle !important
 
-    // .title
-    //   background-color: #ff70ac44
-    // .subtitle
-    //   background-color: #ffbd5b44
-    // .content
-    //   background-color: #b1ff7d44
-
     .title-layout
       .title
         width: 100%
@@ -203,7 +204,7 @@ input, select
 
   .theme-fancy
     .title-layout
-      background-image: url("../themes/fancy-title-bg.svg")
+      // background-image: url("/themes/fancy-title-bg.svg")
       background-repeat: no-repeat;
       background-size: 100% 100%;
 
