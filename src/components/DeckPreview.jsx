@@ -1,12 +1,14 @@
 import React from "react"
 import PropTypes from "prop-types"
 import CardPreview from "./CardPreview"
-import md from "markdown-it"
+const MarkdownIt = require("markdown-it")
+const md = new MarkdownIt()
+
 
 class DeckPreview extends React.Component {
 
   static propTypes = {
-    setEditorContent: PropTypes.func
+    editorContent: PropTypes.string.isRequired
   }
 
   constructor(props) {
@@ -15,104 +17,75 @@ class DeckPreview extends React.Component {
 
   render() {
     return (
-        <div id="preview" className="theme-default">
+        <div id="preview" className={this.props.className}>
           {
-            this.renderSlides()
+            this.getCardsData().map((slideData, i) => {
+              return <CardPreview key={i} data={slideData} />
+            })
           }
-
         </div>
     )
   }
 
-  renderSlides() {
+  getCardsData = () => {
+    let slides = []
+    let slide = {}
+
     if (!this.props.editorContent)
-      return
+      return slides
 
+
+    const domParser = new DOMParser()
+
+    const editorDom = domParser.parseFromString(this.props.editorContent, "text/html")
     let text = ""
-    this.props.editorContent.forEach(element => {
-      console.log(element.props.children)
-
-      text += element.props.children + "\n"
+    editorDom.body.childNodes.forEach(element => {
+      let elementText = element.innerText ? element.innerText.trim() : "\n"
+      text += elementText + "\n"
     })
-    // for (let element in this.props.editorContent) {
-    // }
-    console.log(text)
 
+    const mdRender = md.render(text)
+
+    const mdDom = domParser.parseFromString(mdRender, "text/html")
+
+
+    for (const element of mdDom.body.childNodes) {
+
+      const tag = element.tagName
+      const shouldStartNewSlide = () => ["HR", "H1"].includes(tag)
+      const addElementToSlideArea = (element, key) => {
+        let area = key in slide ? slide[key] : domParser.parseFromString(`<div className="${key}"></div>`, "text/html").body.childNodes[0]
+        area.appendChild(element)
+        slide[key] = area
+      }
+
+      if (shouldStartNewSlide()) {
+        if (slide != {})
+          slides.push(slide)
+        slide = {}
+      }
+
+      switch (tag) {
+        case "H1":
+          addElementToSlideArea(element, "title")
+          break
+        case "H2":
+          addElementToSlideArea(element, "subtitle")
+          break
+        case "HR":
+            break
+        case "A":
+          element.setAttribute("target", "_blank")
+        default:
+          addElementToSlideArea(element, "content")
+          break
+      }
+    }
+
+    slides.push(slide)
+    return slides
   }
 
 }
 
 export default DeckPreview
-
-
-
-// function updatePreview() {
-//   let text = ""
-//   $("#editor").children().each(function () {
-//       text += $(this).text() + "\n"
-//   })
-//   let mdRender = md.render(text)
-
-//   let $slides = $(`<div></div>`)
-//   let $slide = $()
-//   let tag = ""
-//   $($.parseHTML(`<div>${mdRender}</div>`)).children().each(function() {
-//       tag = $(this).prop("tagName").toLowerCase()
-
-//       if (shouldStartNewSlide()) {
-//           addCurrentSlide()
-//           $slide = $(`<div class="slide"></div>`)
-//       }
-
-//       switch (tag) {
-//           case "h1":
-//               getSlideTextArea("title").append(this)
-//               break
-//           case "h2":
-//               getSlideTextArea("subtitle").append(this)
-//               break
-//           case "hr":
-//               break
-//           default:
-//               getSlideTextArea("content").append(this)
-//               break
-//       }
-//   })
-//   addCurrentSlide()
-
-//   $("#preview").html($slides)
-
-//   $("#preview a").attr("target", "_blank");
-
-//   function getSlideTextArea(name) {
-//       let $search = $slide.children(`.${name}`)
-//       return $search.length > 0 ? $search : $slide.append(`<div class="text ${name}"></div>`).find(`.${name}`)
-//   }
-
-//   function shouldStartNewSlide() {
-//       let breaks = ["hr", "h1"]
-//       return breaks.includes(tag)
-//   }
-
-//   function addCurrentSlide() {
-//       $slide.addClass(identifyLayout())
-//       $slides.append($slide.wrap(`<div class="slide-wrapper"></div>`).parent())
-//   }
-
-//   function identifyLayout() {
-//       let layout = "content-layout"
-//       let sections = []
-//       $slide.children().each(function() {
-//           sections.push($(this).attr("class").split(" ")[1])
-//       })
-
-//       if (sections.includes("title") && sections.includes("subtitle") && sections.includes("content")) {
-//           layout = "section-layout"
-//       } else if (sections.includes("title") && (sections.includes("subtitle") || !sections.includes("content") )) {
-//           layout = "title-layout"
-//       }
-
-//       return layout
-//   }
-
-// }

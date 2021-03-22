@@ -5,7 +5,7 @@
   "homepage": "https://github.com/Milotrince/texttoslides",
   "main": "./server/index.js",
   "scripts": {
-    "server": "node-env-run server --exec nodemon",
+    "server": "node . --exec nodemon",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "sass": "node-sass ./src/styles -o ./src/styles --watch --recursive"
@@ -18,7 +18,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "h2m": "^0.7.0",
-    "knex": "^0.21.17",
+    "knex": "^0.95.2",
     "markdown-it": "^12.0.4",
     "node-fetch": "^2.6.1",
     "node-notion": "https://github.com/Milotrince/node-notion/tarball/master",
@@ -28,6 +28,7 @@
     "pptxgenjs": "^3.4.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
+    "react-contenteditable": "^3.3.5",
     "react-dom": "^17.0.1",
     "react-scripts": "^4.0.3"
   },

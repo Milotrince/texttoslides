@@ -9,7 +9,10 @@ class EditorLayout extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = { }
+    this.state = { 
+      editorContent: this.getDefaultText(),
+      slideTheme: "default"
+    }
   }
 
   render() {
@@ -18,10 +21,10 @@ class EditorLayout extends React.Component {
 
         <div className="actions-container">
             <div className="action">
-              <DeckTextImport/>
+              <DeckTextImport setSlideEditorContent={this.handleEditorChange} />
             </div>
             <div className="action">
-              <DeckThemeSelect/>
+              <DeckThemeSelect handleChange={this.handleThemeChange} />
               <DeckDownloadButton/>
             </div>
         </div>
@@ -29,12 +32,12 @@ class EditorLayout extends React.Component {
         <div id="editor-container">
             <div className="editor-column">
                 <p className="label">editor</p>
-                <DeckEditor onEditorChange={this.onEditorChange} />
+                <DeckEditor content={this.state.editorContent} handleChange={this.handleEditorChange} />
             </div>
             <div className="gutter"></div>
             <div className="editor-column">
                 <p className="label">preview</p>
-                <DeckPreview editorContent={this.state.editorContent} />
+                <DeckPreview className={"theme-"+this.state.slideTheme} editorContent={this.state.editorContent} />
             </div>
         </div>
 
@@ -42,15 +45,20 @@ class EditorLayout extends React.Component {
     )
   }
 
-  onEditorChange = (value) => {
-    console.log(value)
+  handleThemeChange = (value) => {
+    this.setState({
+      slideTheme: value
+    })
+  }
+
+  handleEditorChange = (value) => {
     this.setState({
       editorContent: value
     })
   }
 
   getDefaultText() {
-    return (`
+    return `
       # Presentation Title
       ## Subtitle
 
@@ -76,8 +84,9 @@ class EditorLayout extends React.Component {
       --------
 
       dashed line, new slide
-      `
-    )
+      `.split('\n').map(function(line) {
+        return line.length == 0 ? `<div><br/></div>` : `<div>${line}</div>`
+      }).join("")
   }
 
 }

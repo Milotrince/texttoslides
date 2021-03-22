@@ -1,6 +1,11 @@
 import React from "react"
+import PropTypes from "prop-types"
 
 class DeckTextImport extends React.Component {
+
+  static propTypes = {
+    setSlideEditorContent: PropTypes.func.isRequired
+  }
 
   defaultText = "Grab content from link. Works with most articles and Notion!"
 
@@ -50,12 +55,8 @@ class DeckTextImport extends React.Component {
     })
       .then(res => res.json())
       .then(data => {
-        this.setSlideEditorContent(data.html)
+        this.props.setSlideEditorContent(data.html)
       })
-  }
-
-  setSlideEditorContent(html) {
-    console.log(html)
   }
 
   isValidURL(str) {

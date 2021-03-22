@@ -4,26 +4,20 @@ import PropTypes from "prop-types"
 class DeckThemeSelect extends React.Component {
 
   static propTypes = {
-    onChangeTheme: PropTypes.func
+    handleChange: PropTypes.func.isRequired
   }
 
   constructor(props) {
-    super()
+    super(props)
     this.state = {
       theme: "default",
       themes: ["fancy", "whimsical"]
     }
   }
 
-  onChange(event) {
-    console.log(event.target.value)
-    this.props.onChangeTheme(event.target.value)
-    // change #preview clas to theme-{val}
-  }
-
   render() {
     return (
-      <select id="theme" onChange={this.onChange}>
+      <select id="theme" onChange={(event) => this.props.handleChange(event.target.value)}>
           <option value="default">Select theme</option>
           {
             this.state.themes.map(function(theme, i) {

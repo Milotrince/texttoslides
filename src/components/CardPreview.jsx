@@ -1,11 +1,19 @@
 import React from "react"
+import PropTypes from "prop-types"
 
 class CardPreview extends React.Component {
 
+  static propTypes = {
+    data: PropTypes.object.isRequired
+  }
+
   constructor(props) {
-    super()
+    super(props)
     this.state = {
-        layout: "content-layout"
+        layout: this.identifyLayout(),
+        style: {
+          fontSize: window.innerWidth * 0.02 + "px"
+        }
     }
   }
 
@@ -13,56 +21,52 @@ class CardPreview extends React.Component {
     return (
         <div className="slide-wrapper">
             <div className={"slide "+this.state.layout} style={this.state.style}>
-              test
-
+              {
+                Object.keys(this.props.data).map((key, i) => {
+                  return (
+                    <div key={i} ref={ref => {
+                      if (ref) {
+                        ref.innerHTML = ""
+                        return ref.appendChild(this.props.data[key])
+                      }
+                      }}>
+                    </div>
+                  )
+                })
+              }
             </div>
         </div>
     )
   }
 
   componentDidMount() {
-    window.addEventListener('resize', () => this.handleResize)
+    window.addEventListener('resize', this.handleResize)
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', () => this.handleResize)
+    window.removeEventListener('resize', this.handleResize)
   }
 
-  handleResize() {
+  handleResize = () => {
     this.setState({
         style: {
-            fontSize: window.innerWidth * 0.1 + "px"
+            fontSize: window.innerWidth * 0.02 + "px"
         }
     })
+  }
+
+
+  identifyLayout = () => {
+    let layout = "content-layout"
+    let sections = Object.keys(this.props.data)
+    if (sections.includes("title") && sections.includes("subtitle") && sections.includes("content")) {
+        layout = "section-layout"
+    } else if (sections.includes("title") && (sections.includes("subtitle") || !sections.includes("content") )) {
+        layout = "title-layout"
+    }
+    return layout
   }
 
 }
 
 export default CardPreview
-
-
-// function getSlideTextArea(name) {
-//     let $search = $slide.children(`.${name}`)
-//     return $search.length > 0 ? $search : $slide.append(`<div class="text ${name}"></div>`).find(`.${name}`)
-// }
-
-// function addCurrentSlide() {
-//     $slide.addClass(identifyLayout())
-//     $slides.append($slide.wrap(`<div class="slide-wrapper"></div>`).parent())
-// }
-
-// function identifyLayout() {
-//     let layout = "content-layout"
-//     let sections = []
-//     $slide.children().each(function() {
-//         sections.push($(this).attr("class").split(" ")[1])
-//     })
-
-//     if (sections.includes("title") && sections.includes("subtitle") && sections.includes("content")) {
-//         layout = "section-layout"
-//     } else if (sections.includes("title") && (sections.includes("subtitle") || !sections.includes("content") )) {
-//         layout = "title-layout"
-//     }
-
-//     return layout
-// }

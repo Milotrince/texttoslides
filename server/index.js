@@ -1,7 +1,7 @@
 if (process.env.NODE_ENV !== 'production')
     require('dotenv').config({path:'./.env'})
 
-const knex = require('./db/knex.js') // this is unused but here because will need db in future for accounts
+// const knex = require('./db/knex.js') // this is unused but here because will need db in future for accounts
 const express = require('express')
 const bodyParser = require('body-parser')
 const wakeDyno = require('./util/wakeDyno') // hosting on free heroku dyno which sleeps...
