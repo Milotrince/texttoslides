@@ -29,7 +29,7 @@ class EditorLayout extends React.Component {
         <div id="editor-container">
             <div className="editor-column">
                 <p className="label">editor</p>
-                <DeckEditor onEditorChange={(e) => this.onEditorChange(e)} />
+                <DeckEditor onEditorChange={this.onEditorChange} />
             </div>
             <div className="gutter"></div>
             <div className="editor-column">
@@ -42,7 +42,7 @@ class EditorLayout extends React.Component {
     )
   }
 
-  onEditorChange(value) {
+  onEditorChange = (value) => {
     console.log(value)
     this.setState({
       editorContent: value

@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import ContentEditable from "react-contenteditable"
 
 class DeckEditor extends React.Component {
 
@@ -10,28 +11,27 @@ class DeckEditor extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { content : this.getDefaultText() }
-    this.props.onEditorChange(this.state.content)
+    this.contentEditable = React.createRef()
+    this.state = {content: this.getDefaultText()}
   }
 
   render() {
     return (
-      <div id="editor" contentEditable="true" onChange={(e) => this.handleChange(e)} suppressContentEditableWarning={true}>
-          {
-            this.state.content
-          }
-      </div>
+      <ContentEditable
+        innerRef={this.contentEditable}
+        html={this.state.content} // innerHTML of the editable div
+        disabled={false}       // use true to disable editing
+        onChange={this.handleChange} // handle innerHTML change
+        tagName='article' // Use a custom HTML tag (uses a div by default)
+      />
     )
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     console.log(event.target.value)
-    this.setState({
-      content: event.target.value
-    })
-    this.props.onEditorChange(this.state.content)
+    this.setState({html: event.target.value})
+    this.props.onEditorChange(event.target.value)
   }
-
 
   getDefaultText() {
     let text = `
