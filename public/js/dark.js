@@ -1,7 +1,7 @@
 let prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 let $button = $("#dark-toggle")
 // TODO: use cookies instead of localstorage
-let theme = localStorage.getItem("theme");
+let theme = localStorage.getItem("theme") || "light";
 
 document.body.classList.toggle(theme+"-theme")
 $button.text(theme)
