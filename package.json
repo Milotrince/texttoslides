@@ -1,15 +1,12 @@
 {
   "name": "texttoslides",
   "version": "1.0.0",
-  "description": "make slides quickly with markdown",
+  "description": "make and see your slides with markdown",
   "homepage": "https://github.com/Milotrince/texttoslides",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "css-deploy": "npm run css-build && npm run css-postcss",
-    "css-build": "node-sass public/style/style.sass public/style/style.css",
-    "css-postcss": "npm postcss --use autoprefixer --output public/style/style.css public/style/style.css",
-    "css-watch": "npm run css-build -- --watch"
+    "dev": "nodemon .",
+    "sass": "node-sass public/style/style.sass public/style/style.css --watch"
   },
   "author": "Trinity Chung <trinityjchung@gmail.com> (https://github.com/Milotrince)",
   "license": "ISC",
@@ -18,17 +15,14 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "h2m": "^0.7.0",
-    "knex": "^0.21.17",
     "node-fetch": "^2.6.1",
     "node-notion": "https://github.com/Milotrince/node-notion/tarball/master",
-    "node-pandoc": "^0.3.0",
     "node-readability": "^3.0.0",
-    "nunjucks": "^3.2.3",
-    "pg": "^8.5.1",
-    "short-uuid": "^4.1.0"
+    "nunjucks": "^3.2.3"
   },
   "devDependencies": {
-    "node-sass": "^5.0.0"
+    "node-sass": "^5.0.0",
+    "nodemon": "^2.0.7"
   },
   "engines": {
     "node": ">=14"

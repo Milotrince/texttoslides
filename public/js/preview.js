@@ -3,15 +3,18 @@ const md = window.markdownit();
 $(window).ready(event => {
     formatDefaultText()
     updatePreview()
-    adjustTextSize()
 })
 $(window).resize(event => {
-    adjustTextSize()
+    updateTextSize()
 })
 $("#editor").on("input", () => {
     updatePreview()
-    adjustTextSize()
 })
+
+function updatePreview() {
+    updatePreviewContent();
+    updateTextSize();
+}
 
 
 function formatDefaultText() {
@@ -28,14 +31,14 @@ function formatDefaultText() {
     $("#editor").html(html)
 }
 
-function adjustTextSize() {
+function updateTextSize() {
     $(".slide").each(function () {
         let fontSize = $(this).width() * 0.1
         $(this).css("fontSize", fontSize+"px")
     })
 }
 
-function updatePreview() {
+function updatePreviewContent() {
     let text = ""
     $("#editor").children().each(function () {
         text += $(this).text() + "\n"
@@ -48,7 +51,7 @@ function updatePreview() {
     $($.parseHTML(`<div>${mdRender}</div>`)).children().each(function() {
         tag = $(this).prop("tagName").toLowerCase()
 
-        if (shouldStartNewSlide()) {
+        if (shouldStartNewSlide($(this))) {
             addCurrentSlide()
             $slide = $(`<div class="slide"></div>`)
         }
@@ -78,9 +81,14 @@ function updatePreview() {
         return $search.length > 0 ? $search : $slide.append(`<div class="text ${name}"></div>`).find(`.${name}`)
     }
 
-    function shouldStartNewSlide() {
+    function shouldStartNewSlide($next) {
         let breaks = ["hr", "h1"]
-        return breaks.includes(tag)
+        let maxChars = 700
+        let totalChars = $slide.text().length + $next.text().length
+        if (totalChars > maxChars) {
+            // TODO: break content
+        }
+        return breaks.includes(tag) || totalChars > maxChars
     }
 
     function addCurrentSlide() {
@@ -95,8 +103,14 @@ function updatePreview() {
             sections.push($(this).attr("class").split(" ")[1])
         })
 
-        if (sections.includes("title") && sections.includes("subtitle") && sections.includes("content")) {
+        let hasTitle = sections.includes("title")
+        let hasSubtitle = sections.includes("subtitle")
+        let hasContent = sections.includes("content")
+
+        if (hasTitle && hasSubtitle && hasContent) {
             layout = "section-layout"
+        } else if (hasSubtitle && hasContent) {
+            
         } else if (sections.includes("title") && (sections.includes("subtitle") || !sections.includes("content") )) {
             layout = "title-layout"
         }

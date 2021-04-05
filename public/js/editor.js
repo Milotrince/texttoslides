@@ -1,8 +1,8 @@
-let grabHelpText = ""
-let themes = ["fancy", "whimsical"]
+let importHelpText = ""
+let themes = ["chic", "elegant"]
 
 $(document).ready(() => {
-    grabHelpText = $("#grabhelp").text()
+    importHelpText = $("#importhelp").text()
 
     for (let theme of themes) {
         $("#theme").append(`<option value=${theme}>${theme}</option>`)
@@ -12,10 +12,18 @@ $(document).ready(() => {
     if (texthtml) {
         $("#editor").html(texthtml)
     }
+
+    setSlidesTheme(localStorage.getItem("slidetheme") || "default")
 })
 
+function setSlidesTheme(theme) {
+    $("#theme").val(theme)
+    $("#preview").attr("class", `theme-${theme}`)
+    localStorage.setItem("slidetheme", theme);
+}
+
 $("#theme").change(function() {
-    $("#preview").attr("class", `theme-${$(this).val()}`)
+    setSlidesTheme($(this).val())
 })
 
 $("[contenteditable]").on("paste", (event) => {
@@ -31,32 +39,34 @@ $("[contenteditable]").on("paste", (event) => {
 })
 
 
-$("#grab-button").on("click", (e) => {
+$("#import-button").on("click", (e) => {
     let url = $("#link").val()
-    let $help = $("#grabhelp")
+    let $help = $("#importhelp")
     if (!isValidURL(url)) {
         $help.text("Needs to be valid URL")
         $help.addClass("has-text-danger")
         return false
     } else {
-        $help.text(grabHelpText)
+        $help.text(importHelpText)
         $help.removeClass("has-text-danger")
     }
 
-    // TODO: Need to use cookies to show loading/done loading
-    // $("#grab-button").addClass("is-loading")
-    $.post("/grab", { link: url })
+    $.post("/linkimport", { link: url })
         .done(data => {
             $("#editor").html(data.html)
-            // $("#grab-button").removeCLass("is-loading")
+            updatePreview()
         })
 })
 
 $("#download-button").on("click", (e) => {
     let pptx = new PptxGenJS()
     pptx.layout = "LAYOUT_4x3"
+    pptx.title = $(".text.title").first().text()
+    pptx.subject = "made with texttoslides"
+    pptx.author = ""
+    pptx.company = ""
 
-    $('.slide-wrapper').each(function () {
+    $(".slide-wrapper").each(function () {
         let slide = pptx.addSlide()
 
         // slide
@@ -87,8 +97,6 @@ function getText($e) {
 
     let textList = []
     recursive($e)
-    console.log(textList)
-    // console.log(JSON.stringify(textList, null, 2))
     return textList
 
     function recursive($e, tags = []) {
@@ -118,6 +126,9 @@ function getText($e) {
                         let parentTag = $e.parent().prop("tagName").toLowerCase()
                         options.bullet = parentTag === "ol" ? {type: "number"} : true
                         break
+                    case "p":
+                        options.breakLine = true
+                        break
                 }
             }
             textList.push({ text: $e.text(), options: options })
@@ -145,6 +156,7 @@ function getTextProperties($e, $parent) {
         y: offset.top*100+"%",
         w: size.width*100+"%",
         h: size.height*100+"%",
+        paraSpaceAfter: $e.css("margin-bottom"),
         fontSize: getEm($e, "font-size", "width")*96*7.5, // 96 px/inch, slide width 7.5in
         fontFace: $e.css("font-family"),
         align: $e.css("text-align").replace("start", "").replace("end", "right"),
@@ -152,8 +164,6 @@ function getTextProperties($e, $parent) {
         color: rgbToHex($e.css("color")),
         fill: fill
     }
-
-    // console.log(props)
 
     return props
 

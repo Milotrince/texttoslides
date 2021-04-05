@@ -14,7 +14,7 @@ router.get('/*', (req, res) => {
     res.redirect('/')
 })
 
-router.post('/grab', async (req, res) => {
+router.post('/linkimport', async (req, res) => {
     let link = req.body.link
     let url = new URL(req.body.link)
     let text = ''
@@ -27,9 +27,9 @@ router.post('/grab', async (req, res) => {
         read(link, function(err, article, meta) {
             let text = ''
             if (err) {
-                text = 'Could not grab content from link :('
+                text = 'Could not import content from link :('
             } else {
-                text = getTextHtml(article.title, article.content)
+                text = getTextHtml(article.title, article.content, "article", link)
 
                 article.close();
             }
@@ -92,22 +92,25 @@ async function extractFromNotion(link) {
             }
         }
 
-        return getTextHtml(page.getTitle(), content)
+        return getTextHtml(page.getTitle(), content, "Notion", link)
     } else {
         return 'Could not load this Notion page :('
     }
 }
 
 
-function getTextHtml(title, content) {
+function getTextHtml(title, content, sourcetype, sourcelink) {
     let text = h2m(content).trim()
     let lines = text.split(/(?:\r\n|\r|\n)/g);
-    text = `---<br/>title: ${title}<br/>---<br/><br/>`
+    text = `<div># ${title}</div>`
+    text += `<div>## Imported from [${sourcetype}](${sourcelink})</div> <br/>`
+    if (lines.length > 0 && !lines[0].startsWith("#"))
+        text += `<div>------------</div><br/>`
     for (line of lines) {
         if (line === '')
             text += `<br/>`
         else 
-            text += `<div>${line}</div>`
+            text += `<div>${line.replace(/#+\s+/, "# ")}</div>`
     }
     return text
 }

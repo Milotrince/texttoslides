@@ -28,10 +28,10 @@ $fontsize-content: 0.4em
 .theme-default
   --font-title: $font-primary
   --font-content: $font-primary
-.theme-fancy
+.theme-chic
   --font-title: 'Lora', serif
   --font-content: 'Raleway', sans-serif
-.theme-whimsical
+.theme-elegant
   --font-title: 'Flamenco', serif
   --font-content: 'Roboto', sans-serif
  
@@ -62,7 +62,7 @@ nav
       background-color: var(--color-highlight)
 
 .site-content
-  height: 70%
+  height: calc(100vh - 158px)
   color: var(--color-text)
   background-color: var(--color-bg)
 
@@ -135,11 +135,18 @@ input, select
       width: 100%
       height: 100%
       background-color: var(--color-bg)
+      background-repeat: no-repeat
+      background-size: 100% 100%
       overflow: hidden
 
       .text
         font-family: var(--font-content)
         font-size: $fontsize-content !important
+        p
+          margin: 0 0 5px
+        ul, ol
+          margin: 0
+          padding-inline-start: 16px
       .title, .title h1
           font-size: $fontsize-title !important
       .subtitle, .subtitle h2
@@ -160,6 +167,8 @@ input, select
         justify-content: center
         align-items: flex-end
         text-align: center
+        h1
+          margin: 0
       .subtitle
         margin: auto
         width: 80%
@@ -189,8 +198,8 @@ input, select
         padding: 5%
         display: flex
         justify-content: center
-        flex-direction: column
         align-items: center
+        flex-direction: column
 
 
     .content-layout
@@ -201,10 +210,72 @@ input, select
         margin: auto
         width: 90%
 
-  .theme-fancy
+  #preview.theme-chic
+    .slide
+      color: #6d5b57
     .title-layout
-      background-image: url("../themes/fancy-title-bg.svg")
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
+      background-image: url("../themes/chic-title-bg.png")
 
-    
+      .title
+        height: 65%
+        width: 60%
+        margin-left: 30%
+        margin-right: 10%
+        margin-bottom: 5%
+        flex-direction: column
+        justify-content: flex-end
+        text-align: end
+      .subtitle
+        display: flex
+        justify-content: flex-end
+        align-items: flex-end
+        text-align: end
+
+    .section-layout
+      background-image: url("../themes/chic-section-bg.png")
+      .title, .subtitle
+        color: #f2e1d8ff
+        padding-left: 5%
+        text-align: left
+      .content
+        margin-top: 40%
+
+    .content-layout
+      background-image: url("../themes/chic-content-bg.png")
+
+
+  #preview.theme-elegant
+    .slide
+      color: #383838
+    .title-layout
+      background-image: url("../themes/elegant-title-bg.png")
+
+      .title
+        color: #ffffff
+        height: 30%
+        width: 60%
+        margin-top: 30%
+        margin-left: 35%
+        margin-right: 5%
+        flex-direction: column
+        justify-content: flex-end
+        text-align: end
+      .subtitle
+        color: #ffffff
+        margin-right: 5%
+        display: flex
+        justify-content: flex-end
+        align-items: flex-end
+        text-align: end
+
+    .section-layout
+      background-image: url("../themes/elegant-section-bg.png")
+      .title, .subtitle
+        color: #ffffff
+        padding-right: 10%
+        text-align: right
+      .content
+        margin-left: 5%
+
+    .content-layout
+      background-image: url("../themes/elegant-content-bg.png")
