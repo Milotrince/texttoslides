@@ -29,13 +29,8 @@ $("#theme").change(function() {
 $("[contenteditable]").on("paste", (event) => {
     event.preventDefault()
     let clipboard = event.originalEvent.clipboardData
-
     let text = clipboard.getData("text/plain")
     document.execCommand("inserttext", false, text)
-
-    retrieveClipboardImageAsBase64(clipboard, (image) => {
-        document.execCommand("insertImage", false, image)
-    })
 })
 
 
@@ -59,9 +54,10 @@ $("#import-button").on("click", (e) => {
 })
 
 $("#download-button").on("click", (e) => {
+    let pptxTitle = $(".text.title").first().text()
     let pptx = new PptxGenJS()
     pptx.layout = "LAYOUT_4x3"
-    pptx.title = $(".text.title").first().text()
+    pptx.title = pptxTitle
     pptx.subject = "made with texttoslides"
     pptx.author = ""
     pptx.company = ""
@@ -89,7 +85,7 @@ $("#download-button").on("click", (e) => {
         })
     })
     
-    pptx.writeFile()
+    pptx.writeFile(`${pptxTitle.replace(/[^0-9a-zA-Z]+/g, "")}.pptx`)
 })
 
 
@@ -199,38 +195,4 @@ function isValidURL(str) {
       "(\\?[;&a-z\\d%_.~+=-]*)?"+ // query string
       "(\\#[-a-z\\d_]*)?$","i"); // fragment locator
     return !!pattern.test(str);
-}
-
-function retrieveClipboardImageAsBase64(clipboardData, callback, imageFormat){
-    if (!clipboardData || !clipboardData.items) {
-        if (typeof(callback) == "function") {
-            callback(undefined)
-        }
-    }
-
-    for (let item of clipboardData.items) {
-        if (item.type.indexOf("image") == -1) continue
-
-        let blob = item.getAsFile()
-        let canvas = document.createElement("canvas")
-        let ctx = canvas.getContext("2d")
-        let img = new Image()
-
-        img.onload = function(){
-            let area = this.width*this.height
-            let maxarea = 800*800
-            let scalar = area > maxarea ? maxarea/area : 1
-            canvas.width = this.width * scalar
-            canvas.height = this.height * scalar
-            ctx.drawImage(img, 0, 0, this.width*scalar, this.height*scalar)
-            if (typeof(callback) == "function"){
-                callback(canvas.toDataURL(
-                    (imageFormat || "image/png")
-                ))
-            }
-        }
-
-        let URLObj = window.URL || window.webkitURL
-        img.src = URLObj.createObjectURL(blob)
-    }
 }

@@ -7,7 +7,7 @@ const notion = new Notion()
 
 
 router.get('/', (req, res) => {
-    res.render('editor.njk')
+    res.render('editor.njk', {gtag: process.env.GOOGLE_TAG} )
 })
 
 router.get('/*', (req, res) => {
