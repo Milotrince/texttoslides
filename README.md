@@ -1,7 +1,7 @@
 # texttoslides
 ## Make your presentation with Markdown!
 
-Live site: [http://texttoslides.tk](http://texttoslides.tk)
+Live site: [https://texttoslides.herokuapp.com/](https://texttoslides.herokuapp.com/)
 
 ![screenshot](./doc/screenshot.png)
 
